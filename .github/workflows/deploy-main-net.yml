@@ -18,6 +18,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Show files
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 4 -type f | sort
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -31,7 +36,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
-          context: ./dotnet-api/NetaSystems.Hiring.Api
+          context: .
           file: ./dotnet-api/NetaSystems.Hiring.Api/NetaSystems.Hiring.Api/Dockerfile
           push: true
           tags: |

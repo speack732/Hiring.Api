@@ -7,11 +7,11 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["NetaSystems.Hiring.Api/NetaSystems.Hiring.Api.csproj", "NetaSystems.Hiring.Api/"]
-RUN dotnet restore "./NetaSystems.Hiring.Api/NetaSystems.Hiring.Api.csproj"
+COPY ["dotnet-api/NetaSystems.Hiring.Api/NetaSystems.Hiring.Api/NetaSystems.Hiring.Api.csproj", "NetaSystems.Hiring.Api/"]
+RUN dotnet restore "NetaSystems.Hiring.Api/NetaSystems.Hiring.Api.csproj"
 
 COPY . .
-WORKDIR "/src/NetaSystems.Hiring.Api"
+WORKDIR "/src/dotnet-api/NetaSystems.Hiring.Api/NetaSystems.Hiring.Api"
 RUN dotnet build "./NetaSystems.Hiring.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
