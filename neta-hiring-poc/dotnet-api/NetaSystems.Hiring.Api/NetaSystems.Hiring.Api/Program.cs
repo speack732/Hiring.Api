@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NetaSystems.Hiring.Api.Configuration;
 using NetaSystems.Hiring.Api.Data;
 using NetaSystems.Hiring.Api.Data.Seed;
 using NetaSystems.Hiring.Api.Entities;
@@ -38,7 +39,17 @@ builder.Services
 
 builder.Services.AddScoped<JwtTokenService>();
 
+
+
+
 var jwtKey = builder.Configuration["Jwt:Key"]!;
+
+
+builder.Services.Configure<BackblazeOptions>(
+    builder.Configuration.GetSection("Backblaze"));
+
+builder.Services.AddScoped<BackblazeStorageService>();
+
 
 builder.Services
     .AddAuthentication(options =>
