@@ -1,5 +1,4 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
@@ -7,16 +6,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["dotnet-api/NetaSystems.Hiring.Api/NetaSystems.Hiring.Api/NetaSystems.Hiring.Api.csproj", "NetaSystems.Hiring.Api/"]
+
+COPY ["NetaSystems.Hiring.Api/NetaSystems.Hiring.Api.csproj", "NetaSystems.Hiring.Api/"]
 RUN dotnet restore "NetaSystems.Hiring.Api/NetaSystems.Hiring.Api.csproj"
 
 COPY . .
-WORKDIR "/src/dotnet-api/NetaSystems.Hiring.Api/NetaSystems.Hiring.Api"
-RUN dotnet build "./NetaSystems.Hiring.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/NetaSystems.Hiring.Api"
+RUN dotnet build "NetaSystems.Hiring.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./NetaSystems.Hiring.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "NetaSystems.Hiring.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
