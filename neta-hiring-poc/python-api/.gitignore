@@ -42,7 +42,6 @@ logs/
 *.sqlite
 *.sqlite3
 uploads/
-storage/
 
 # IDE/editor files
 .idea/
