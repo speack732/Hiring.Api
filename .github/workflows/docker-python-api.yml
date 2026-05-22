@@ -1,0 +1,41 @@
+name: Build and Deploy Python API
+
+on:
+  push:
+    branches:
+      - main-python
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/neta-hiring-python-api
+  IMAGE_TAG: main-python
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
+
+      - name: Push Docker image
+        run: |
+          docker push $IMAGE_NAME:$IMAGE_TAG
+
+      - name: Trigger Portainer webhook
+        run: |
+          curl -X POST "${{ secrets.PORTAINER_PYTHON_WEBHOOK_URL }}"
